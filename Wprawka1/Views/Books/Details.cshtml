@@ -1,0 +1,57 @@
+﻿@model Wprawka1.Models.Book
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Szczegóły</title>
+</head>
+<body>
+
+<div>
+    <h4>Szczegóły książki</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Publisher)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Publisher!.Name)
+        </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Authors)
+            </dt>
+            <dd class="col-sm-10">
+                @if (Model.Authors != null && Model.Authors.Any())
+                {
+                    <ul>
+                        @foreach (var author in Model.Authors)
+                        {
+                            <li>@author.FirstName @author.LastName</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span>Brak przypisanych autorów.</span>
+                }
+            </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edytuj</a> |
+    <a asp-action="Index">Powrót do listy</a>
+</div>
+</body>
+</html>
