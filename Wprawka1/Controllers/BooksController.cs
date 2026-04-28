@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Wprawka1.Data;
 using Wprawka1.Models;
-using Microsoft.AspNetCore.Authorization;
+using Wprawka1.Attributes;
 
 namespace Wprawka1.Controllers
 {
@@ -51,20 +51,28 @@ namespace Wprawka1.Controllers
         }
 
         // GET: Books/Create
-        [Authorize]
+        [CustomAuthorize]
         public IActionResult Create()
         {
+            if (string.IsNullOrEmpty(Request.Cookies["UserLogin"]))
+            {
+                return RedirectToAction("Login", "Account");
+            }
             ViewData["PublisherId"] = new SelectList(_context.Publishers, "Id", "Name");
             ViewData["AuthorIds"] = new MultiSelectList(_context.Authors, "Id", "LastName");
             return View();
         }
 
         // POST: Books/Create
-        [Authorize]
+        [CustomAuthorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,PublisherId")] Book book, int[] selectedAuthors)
         {
+            if (string.IsNullOrEmpty(Request.Cookies["UserLogin"]))
+            {
+                return RedirectToAction("Login", "Account");
+            }
             if (ModelState.IsValid)
             {
                 if (selectedAuthors != null && selectedAuthors.Length > 0)
@@ -91,9 +99,13 @@ namespace Wprawka1.Controllers
         }
 
         // GET: Books/Edit/5
-        [Authorize]
+        [CustomAuthorize]
         public async Task<IActionResult> Edit(int? id)
         {
+            if (string.IsNullOrEmpty(Request.Cookies["UserLogin"]))
+            {
+                return RedirectToAction("Login", "Account");
+            }
             if (id == null)
             {
                 return NotFound();
@@ -116,11 +128,15 @@ namespace Wprawka1.Controllers
         // POST: Books/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+        [CustomAuthorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,PublisherId")] Book book, int[] selectedAuthors)
         {
+            if (string.IsNullOrEmpty(Request.Cookies["UserLogin"]))
+            {
+                return RedirectToAction("Login", "Account");
+            }
             if (id != book.Id)
             {
                 return NotFound();
@@ -166,9 +182,13 @@ namespace Wprawka1.Controllers
         }
 
         // GET: Books/Delete/5
-        [Authorize]
+        [CustomAuthorize]
         public async Task<IActionResult> Delete(int? id)
         {
+            if (string.IsNullOrEmpty(Request.Cookies["UserLogin"]))
+            {
+                return RedirectToAction("Login", "Account");
+            }
             if (id == null)
             {
                 return NotFound();
@@ -186,11 +206,15 @@ namespace Wprawka1.Controllers
         }
 
         // POST: Books/Delete/5
-        [Authorize]
+        [CustomAuthorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (string.IsNullOrEmpty(Request.Cookies["UserLogin"]))
+            {
+                return RedirectToAction("Login", "Account");
+            }
             var book = await _context.Books.FindAsync(id);
             if (book != null)
             {
